@@ -1,17 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+import Lobby from './components/lobby';
+import Room from './components/room';
+
+import Signal from './signal';
+
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import 'bulma/css/bulma.css';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const App = () => {
+  const signal = new Signal();
+  return (
+    <BrowserRouter>
+      <main>
+        <Switch>
+          <Route path="/room/:roomid">
+            <Room signal={ signal }/>
+          </Route>
+          <Route path="/">
+            <Lobby signal={ signal } />
+          </Route>
+        </Switch>
+      </main>
+    </BrowserRouter>
+  );
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const root = document.querySelector('#root');
+ReactDOM.render(<App />, root);

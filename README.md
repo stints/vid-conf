@@ -1,68 +1,67 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Vid-conf
 
-## Available Scripts
+This is an incredibly simple video conferencing app that I made for fun.  My aim was to build this so that my family could make a video chat room that was dead simple.  No account is needed.  Simply create a room via the lobby and send the URL that is generated to anyone you wish to connect with.  The unique room id is the only source of "security" to prevent random people from joining.  
 
-In the project directory, you can run:
+This application utilizes the firebase firestore realtime database as a signaling server, it connects multiple peers together using the RTCPeerConnection object.  Please note that each occupent in the room is individually connected to one another.  This means if five people are in the room, each person is connected to the other four.  This potentially means heavy bandwidth usage if you connect with many people.
 
-### `npm start`
+Currently, no turn server is being used.  I'm using only free stun servers provided by google, mozilla, and stunprotocol.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The current features:
+* No account required to use.
+* Anyone can create a room.  Rooms will persist even if everyone disconnects.
+* Multi peer connections.
+* Hide your local stream.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Features that need to be added:
+* Better mobile support.
+* Voice detection.  This would allow the person talking to take the "active" video position.
+* Handling browser close events.  Currently, the system will not handle the person leaving if they do not click the leave button.
+* Cleaner layout of the room.
 
-### `npm test`
+### Running your own vid-conf app
+There is a file that you will need to add yourself.
+```
+\src\constants.js
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Here is an example constants.js file.
 
-### `npm run build`
+```js
+const mediaConstraints = {
+  video: true,
+  audio: true,
+};
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+const firebaseConfig = {
+apiKey: "API_KEY",
+authDomain: "AUTH_DOMAIN",
+databaseURL: "DATABASE_URL",
+projectId: "PROJECT_ID",
+storageBucket: "STORAGE_BUCKET",
+messagingSenderId: "SENDER_ID",
+appId: "APP_ID",
+measurementId: "MEASURE_ID"
+};
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+const serverConfig = {
+iceServers: [
+  {
+    urls: 'stun:stun.l.google.com:19302',
+  },
+  {
+    urls: 'stun:stun.services.mozilla.com:3478',
+  },
+  {
+    urls: 'stun:stun.stunprotocol.org:3478',
+  },
+],
+};
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export { mediaConstraints, firebaseConfig, serverConfig };
+```
 
-### `npm run eject`
+Please read [this](https://webrtc.org/getting-started/media-capture-and-constraints) to understand the 'mediaConstraints' object.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The firebaseConfig is generated for you when you create a firebase app.  I am utilizing the firestore database as a signaling server.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The serverConfig lists only STUN servers as a TURN server is too costly to use for such a simple project.  Please go [here](https://gist.github.com/mondain/b0ec1cf5f60ae726202e) to find any other public STUN servers.
