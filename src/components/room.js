@@ -17,6 +17,12 @@ const Room = ({ signal }) => {
     const [clients, setClients] = useState([]);
     const [localStream, setLocalStream] = useState(null);
 
+    window.addEventListener("beforeunload", e => {
+        if (validRoom) {
+            leaveRoom();
+        }
+    });
+
     useEffect(() => {
         async function validateRoom() {
             const isValid = await signal.doesRoomExist(roomid);
@@ -36,7 +42,7 @@ const Room = ({ signal }) => {
             async function setupLocalUser() {
                 const uid = uniqid();
                 setUserid(uid);
-                await signal.joinRoom(roomid, uid, setClients);
+                await signal.joinRoom(roomid, uid, setClients, handleClientLeave);
 
                 const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
                 setLocalStream(stream);
@@ -75,6 +81,14 @@ const Room = ({ signal }) => {
         await signal.leaveRoom(roomid, userid);
         history.push('/');
     };
+
+    const handleClientLeave = (oldClient) => {
+        console.log(`Client ${ oldClient.remoteid } has left.`);
+        const newClients = clients.filter(client => {
+            return client.remoteid !== oldClient.remoteid;
+        });
+        setClients(newClients);
+    }
 
     return (validRoom && localStream !== null?
         <div className="room">

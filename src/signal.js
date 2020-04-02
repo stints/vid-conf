@@ -20,7 +20,7 @@ export default class Signal {
         });
     }
 
-    async joinRoom(roomid, userid, setClients) {
+    async joinRoom(roomid, userid, setClients, handleClientLeave) {
         await this.db.collection('rooms_occupents').add({
             roomid: roomid,
             userid: userid,
@@ -34,7 +34,7 @@ export default class Signal {
                     const data = change.doc.data();
                     if (data.userid !== userid) {
                         console.log('New client found - ', data.userid, init);
-                        const client = new Client(userid, data.userid, roomid, this, init);
+                        const client = new Client(userid, data.userid, roomid, this, init, handleClientLeave);
 
                         clients.push(client);
                     }

@@ -20,34 +20,20 @@ body {
 
 .room {
   position: relative;
-  width: max-content;
+  width: 100vw;
   margin-left: auto;
   margin-right: auto;
-}
-
-.remote-video-container {
-  height: 100vh !important;
-  width: 100vw;
-  z-index: 1;
-}
-
-.remote-active-video {
-  height: 100vh !important;
-  width: 100vw;
-  z-index: 2;
 }
 
 .remote-video-list {
   z-index: 3;
   width: 100vw;
-  height: 20vh;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
+  height: 100vh;
 }
 
 .remote-video {
-  height: 20vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .local-video-container {

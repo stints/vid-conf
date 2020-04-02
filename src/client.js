@@ -1,7 +1,7 @@
 import { serverConfig } from './constants';
 
 export default class Client {
-    constructor(localid, remoteid, roomid, signal, shouldSendOffer) {
+    constructor(localid, remoteid, roomid, signal, shouldSendOffer, handleClientLeave) {
         this.localid = localid;
         this.remoteid = remoteid;
         this.roomid = roomid;
@@ -12,6 +12,8 @@ export default class Client {
         this.signal = signal;
         this.remoteVideo = null;
         this.shouldSendOffer = shouldSendOffer;
+
+        this.handleClientLeave = handleClientLeave;
 
         this.pc = new RTCPeerConnection(serverConfig);
         this.pc.onicecandidate = ({candidate}) => this.onIceCandidate(candidate);
@@ -38,7 +40,13 @@ export default class Client {
         this.channel.onclose = (ev) => {
             this.pc.removeTrack(this.sender);
             this.pc.close();
+
+            this.handleClientLeave(this);
         }
+    }
+
+    get closed() {
+        return this.pc.connectionState === 'closed';
     }
 
     leave() {

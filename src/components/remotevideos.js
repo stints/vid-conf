@@ -3,13 +3,12 @@ import React from 'react';
 const RemoteVideos = ({clients}) => {
     return (clients.length ? 
         <div className="remote-video-container">
-            <video id={ clients[0].remoteid } className="remote-active-video" autoPlay />
             <div className="remote-video-list">
-                <div className="level is-hidden-mobile">
+                <div className="columns is-gapless">
                     {
-                        clients.slice(1).map(client => {
+                        clients.map(client => {
                             return (
-                                <div key={ client.remoteid } className="level-item has-text-centered">
+                                <div key={ client.remoteid } className="column is-flex">
                                     <video id={ client.remoteid } className="remote-video" autoPlay />
                                 </div>
                             )
