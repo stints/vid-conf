@@ -14,9 +14,6 @@ The current features:
 
 Features that need to be added:
 * Better mobile support.
-* Voice detection.  This would allow the person talking to take the "active" video position.
-* Handling browser close events.  Currently, the system will not handle the person leaving if they do not click the leave button.
-* Cleaner layout of the room.
 
 ### Running your own vid-conf app
 There is a file that you will need to add yourself.
